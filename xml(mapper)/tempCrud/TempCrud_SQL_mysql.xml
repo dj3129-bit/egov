@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tempCrudDAO">
+
+ 	<resultMap id="temp" type="egovframework.let.tempCrud.service.TempCrudVO">
+ 		<result property="crudCtgry" column="CRUD_CTGRY"/>
+ 		<result property="crudSj" column="CRUD_SJ"/>
+ 		<result property="crudId" column="CRUD_ID"/>
+ 		<result property="crudCn" column="CRUD_CN"/>
+ 		<result property="userNm" column="USER_NM"/>
+ 		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM"/>
+ 	</resultMap>
+ 	
+ 	<insert id="tempCrudDAO.insertTemp" parameterType="egovframework.let.tempCrud.service.TempCrudVO">
+ 		INSERT INTO lETCRUD(
+ 			CRUD_CTGRY
+ 			, CRUD_SJ
+ 			, CRUD_ID
+ 			, CRUD_CN
+ 			, USER_NM
+ 			, FRST_REGIST_PNTTM
+ 		) VALUES (
+ 			#{crudCtgry}
+ 			, #{crudSj}
+ 			, #{crud_Id}
+ 			, #{crudCn}
+ 			, #{userNm}
+ 			, #{frstRegistPnttm}
+ 		)
+ 	</insert>
+ 	
+ 	<select id="tempCrudDAO.selectTemp" resultMap="temp">
+ 		SELECT
+ 			CRUD_CTGRY
+ 			, CRUD_SJ
+ 			, CRUD_ID
+ 			, CRUD_CN
+ 			, USER_NM
+ 			, FRST_REGIST_PNTTM
+ 			FROM LETCRUD
+ 			WHERE CRUD_CTGRY = #{crudCtgry}
+ 	</select>
+ 	
+ 	<select id="tempCrudDAO.selectTempList" resultType="egovMap">
+ 		SELECT
+ 			CRUD_CTGRY
+ 			, CRUD_SJ
+ 			, CRUD_ID
+ 			, CRUD_CN
+ 			, USER_NM
+ 			, FRST_REGIST_PNTTM
+ 			FROM letcrud
+ 			ORDER BY CRUD_ID DESC
+ 			LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+ 	</select>
+ 	
+ 	<select id="tempCrudDAO.selectTempListCnt" resultType="java.lang.Integer">
+ 		SELECT
+ 			COUNT(*) CNT
+ 		FROM letcrud
+ 	</select>
+ 	
+ 	<update id="tempCrudDAO.updateTemp" parameterType="egovframework.let.tempCrud.service.TempCrudVO">
+ 		UPDATE letcrud SET
+ 			CRUD_CTGRY = #{crudCtgry}
+ 		WHERE CRUD_ID = #{crudId}
+ 	</update>
+ 	
+ 	<delete id="tempCrudDAO.deleteTemp" parameterType="egovframework.let.tempCrud.service.TempCrudVO">
+ 		DELETE FROM letcrud
+ 		WHERE CRUD_ID = #{crudId}
+ 	</delete>
+	
+</mapper>
