@@ -50,6 +50,18 @@
 				</div>
 			</div>
 		</article>
+		
+		<article>
+			<h3 class="icon2 ico-user">SNS회원</h3>
+			<div class="confirm_box">
+				<p class="mB20">네이버 회원</p>
+				<div class="btn-cont">
+					<a class="btn-naver" href="${naverAuthUrl}" data-type="join">
+						<img src="/asset/front/images/common/btn-naver.png" width="150" alt="네이버 로그인 버튼"/>
+					</a>
+				</div>
+			</div>
+		</article>
 	</div>
 </form>
 
@@ -69,5 +81,54 @@ $(document).ready(function(){
 	alert("${loginMessage}");
 </c:if>
 
+</script>
+
+<form id="joinFrm" name="joinFrm" method="post" action="/join/insertMember.do">
+	<input type="hidden" name="loginType" value=""/>
+	<input type="hidden" name="emplyrId"/>
+	<input type="hidden" name="userNm"/>
+	<input type="hidden" name="emailAdres"/>
+</form>
+
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script>
+$(document).ready(function(){
+	//카카오 로그인 버튼
+	$(".btn-kakao").click(function(){
+		const type = $(this).data("type");
+		kakaoLogin(type);
+		return false;
+	});
+});
+
+//카카오 키 정보 입력
+Kakao.init('97a24d5630c9965f68c6993f26ff76bb');
+
+//카카오 SDK 초기화
+Kakao.isInitialized();
+
+//카카오로그인
+function kakaoLogin(type){
+	Kakao.Auth.login({
+		success:function(response){
+			Kakao.API.request({
+				url:'/v2/user/me',
+				success:function(response){
+					console.log(response)
+					$("input[name=loginType]").val("KAKAO");
+					$("input[name=emplyrId]").val(response.id);
+					$("input[name=userNm]").val(response.properties.nickname);
+					//$("input[name=emailAdres]").val(response.kakao_account.email);
+					$("#joinFrm").submit();
+				},
+				fail:function(error){
+					console.log(error)
+				},
+			})
+		}, fail:function(error){
+			console.log(error)
+		},
+	})
+}
 </script>
 <c:import url="/template/footer.do" charEncoding="utf-8"/>

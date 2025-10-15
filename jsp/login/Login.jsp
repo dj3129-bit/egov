@@ -33,6 +33,12 @@
 							</span>
 							
                             <button type="submit" class="btn-lg spot p10">로그인</button>
+                            
+                            <div class="btn-cont">
+                            	<a class="btn-kakao" href="#" data-type="login">
+                            		<img src="/asset/front/images/common/btn-kakao.png" width="200" alt="카카오 로그인 버튼" />
+                            	</a>
+                            </div>
 						</fieldset>
 					</form>
 				</div>
@@ -76,6 +82,53 @@ $(document).ready(function(){
 	//아이디 입력 창 포커스 설정
 	$('#id').focus();
 });
+</script>
+
+<form id="frmLogin" name="frmLogin" method="post" action="/login/actionLogin.do">
+	<input type="hidden" name="loginType" value=""/>
+	<input type="hidden" name="snsLd" name="id"/>
+</form>
+
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script>
+$(document).ready(function(){
+	//카카오 로그인 버튼
+	$(".btn-kakao").click(function(){
+		const type = $(this).data("type");
+		kakaoLogin(type);
+		return false;
+	});
+});
+
+//카카오 키 정보 입력
+Kakao.init('97a24d5630c9965f68c6993f26ff76bb');
+
+//카카오 SDK 초기화
+Kakao.isInitialized();
+
+//카카오로그인
+function kakaoLogin(type){
+	Kakao.Auth.login({
+		success:function(response){
+			Kakao.API.request({
+				url:'/v2/user/me',
+				success:function(response){
+					console.log(response)
+					$("input[name=loginType]").val("KAKAO");
+					$("input[name=emplyrId]").val(response.id);
+					$("input[name=userNm]").val(response.properties.nickname);
+					//$("input[name=emailAdres]").val(response.kakao_account.email);
+					$("#joinFrm").submit();
+				},
+				fail:function(error){
+					console.log(error)
+				},
+			})
+		}, fail:function(error){
+			console.log(error)
+		},
+	})
+}
 </script>
 
 <c:import url="/template/footer.do" charEncoding="utf-8"/>
